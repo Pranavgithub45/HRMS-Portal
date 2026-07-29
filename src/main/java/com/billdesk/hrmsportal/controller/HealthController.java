@@ -11,6 +11,6 @@ public class HealthController {
 
     @GetMapping("/health")
     public String health() {
-        return "HRMS backend is up";
+        return "Code is running..";
     }
 }
