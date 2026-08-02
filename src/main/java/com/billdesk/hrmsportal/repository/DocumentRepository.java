@@ -3,6 +3,7 @@ package com.billdesk.hrmsportal.repository;
 import com.billdesk.hrmsportal.entity.Document;
 import com.billdesk.hrmsportal.entity.enums.DocumentType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,4 +26,8 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     List<Document> findByEmployee_EmployeeIdIn(List<Long> employeeIds);
 
     long countByDocumentType(DocumentType documentType);
+
+    // HR dashboard — employees missing documents = total employees - this count
+    @Query("SELECT COUNT(DISTINCT d.employee.employeeId) FROM Document d")
+    long countDistinctEmployeesWithDocument();
 }

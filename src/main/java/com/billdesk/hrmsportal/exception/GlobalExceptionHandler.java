@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,5 +78,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             return "Unsupported Content-Type. Send Content-Type: application/json";
         }
         return ex.getMessage() != null ? ex.getMessage() : "Request could not be processed";
+    }
+
+    /** File too large for the configured multipart limit — reported as 413 instead of 500. */
+    @Override
+    protected ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex,
+                                                                           HttpHeaders headers,
+                                                                           HttpStatusCode status,
+                                                                           WebRequest request) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body(Map.of("error", "File exceeds the maximum allowed size"));
     }
 }
